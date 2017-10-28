@@ -2,10 +2,20 @@ const Client = require('./index');
 
 const test = new Client('localhost:3000');
 
-test.attach((data) => {
-  console.log('streamOne - got data ' + JSON.stringify(data));
-});
+//test.attach(console.dir);
 
-// streamTwo.attach((data) => {
-//   console.log('streamTwo - got data ' + JSON.stringify(data));
+var ag_poop = test.getAggregate('poop');
+// ag_poop.attach((data) => {
+//   console.log('ag_poop - got data ' + JSON.stringify(data));
 // });
+setInterval(() => {
+  ag_poop.dispatch({ an: 'event_ag_poop' });
+}, 3000);
+
+var ag_poop2 = test.getAggregate('poop');
+ag_poop2.attach((data) => {
+  console.log('ag_poop2 - got data ' + JSON.stringify(data));
+});
+// setInterval(() => {
+//   ag_poop2.dispatch({ an: 'event_ag_poop2' });
+// }, 3000);

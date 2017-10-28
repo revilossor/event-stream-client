@@ -13,7 +13,9 @@ Stream.prototype.attach = function(handler) {
   this.handlers.push(handler);
 };
 Stream.prototype.dispatch = function(data) {
-  console.log('[Stream::dispatch] ' + JSON.stringify(data));
+  if(this.socket.readyState !== 1) {
+    throw new Error('cant dispatch if socket isnt open ( aggregateId "' + this.aggregateId + '")');
+  }
   this.socket.send(new Buffer.from(JSON.stringify(data)));
 };
 
