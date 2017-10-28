@@ -12,9 +12,8 @@ const Client = function(uri) {
 
 Client.prototype.init = function(uri) {
   const socket = new WebSocket(`ws://${uri}/events`);
-  this.getStream = aggregates => new Stream(socket, aggregates);
-  const allMessages = this.getStream([]);
-  this.attach = handler => allMessages.attach(handler);
+  const stream = new Stream(socket);
+  this.attach = handler => stream.attach(handler);
 };
 
 module.exports = Client;
