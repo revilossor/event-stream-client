@@ -1,0 +1,15 @@
+{
+  "name": "rahv-stream-client",
+  "version": "0.0.0",
+  "description": "event stream client module for request a home visit",
+  "main": "app/main.js",
+  "scripts": {
+    "test": ".."
+  },
+  "repository": {
+    "type": "git",
+    "url": ".."
+  },
+  "author": "oliver.ross@hotmail.com",
+  "license": "ISC"
+}
