@@ -5,25 +5,32 @@ const query = `query getEvents($selector: EventSelector!) {
   getEvents(selector: $selector){ data version aggregateId }
 }`;
 
-const Aggregate = function(uri, aggregateId, version) {
+const Aggregate = function(uri, aggregateId) {
   this.stream = new Stream(new WebSocket(`ws://${uri}/events`), aggregateId);
-  const graphQLClient = new request.GraphQLClient(`http://${uri}/query`);
-  graphQLClient.request(query, { selector: { aggregateId, version } }).then((events) => {
-    this.events = events.getEvents;
-    this.eventFactory = require('./event-factory')(aggregateId, this.events.length);
+  this.aggregateId = aggregateId;
+  this.uri = uri;
+};
+Aggregate.prototype.init = function(handler, version = 0) {
+  return new Promise((resolve, reject) => {
+    const graphQLClient = new request.GraphQLClient(`http://${this.uri}/query`);
+    graphQLClient.request(query, { selector: {
+      aggregateId: this.aggregateId,
+      version
+    } }).then((events) => {
+      this.events = events.getEvents;
+      this.events.forEach(event => handler.call(null, event));
+      this.handler = handler;
+      this.stream.attach(handler);
+      this.eventFactory = require('./event-factory')(this.aggregateId, this.events.length);
+      resolve();
+    }).catch(console.dir);
   });
-};
-Aggregate.prototype.getVersion = function() {
-  return this.events.length();
-};
-Aggregate.prototype.attach = function(handler) {      // TODO pass generic handler???
-  return this.stream.attach(handler);
 };
 Aggregate.prototype.dispatch = function(data) {
   const event = this.eventFactory(data);
   this.events.push(event);
-  console.dir(this.events);
+  this.handler.call(null, event);
   return this.stream.dispatch(event);
 };
 
-module.exports = (url) => (aggregateId, version = 0) => new Aggregate(url, aggregateId, version);
+module.exports = (url) => (aggregateId) => new Aggregate(url, aggregateId);
