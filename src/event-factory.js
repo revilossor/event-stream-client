@@ -1,8 +1,5 @@
-module.exports = (aggregateId, version) => ({
-  get: (data) => ({
-    aggregateId,
-    data,
-    version: ++version
-  }),
-  version: () => version
+module.exports = (aggregateId, version) => (data) => ({
+  aggregateId,
+  data,
+  version: ++version
 });
