@@ -1,17 +1,17 @@
 {
-  "name": "rahv-stream-client",
+  "name": "rahv-spike-stream-client",
   "version": "0.0.0",
-  "description": "event stream client module for request a home visit",
+  "description": "event stream client for rahv spike",
   "main": "index.js",
   "scripts": {
     "test": ".."
   },
   "repository": {
     "type": "git",
-    "url": ".."
+    "url": "https://github.com/revilossor/rahv-client.git"
   },
   "author": "oliver.ross@hotmail.com",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENCE",
   "dependencies": {
     "graphql-request": "^1.4.0",
     "ws": "^3.2.0"
